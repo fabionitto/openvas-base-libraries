@@ -11,7 +11,7 @@ RUN apt-get update && apt-get -y install \
 	heimdal-dev \
 	heimdal-multidev \
 	libfreeradius-client2 \
-	libgcrypt11-dev
+	libgcrypt11-dev \
 	libglib2.0-dev \
 	libgnutls28-dev \
 	libgpgme11-dev \
@@ -26,29 +26,28 @@ RUN apt-get update && apt-get -y install \
 	pkg-config \
 	uuid-dev \
 	wget \
-	xmltoman \
-	zlib
+	xmltoman && \
+	apt-get clean 
 
 RUN mkdir /src && \
 	cd /src && \
+	wget http://wald.intevation.org/frs/download.php/1975/openvas-smb-1.0.1.tar.gz -O openvas-smb.tar.gz && \
 	wget http://wald.intevation.org/frs/download.php/2262/openvas-libraries-8.0.6.tar.gz -O openvas-libraries.tar.gz && \
-	wget http://wald.intevation.org/frs/download.php/1975/openvas-smb-1.0.1.tar.gz && -O openvas-smb.tar.gz 
-
-RUN tar xvzf openvas-libraries.tar.gz && \
 	tar xvzf openvas-smb.tar.gz && \
-
-RUN cd /src/openvas-smb-* && \
+	tar xvzf openvas-libraries.tar.gz && \
+	cd /src/openvas-smb-* && \
 	mkdir build && \
 	cd build && \
 	cmake .. && \
 	make && \
 	make install && \
-
-RUN cd /src/openvas-libraries-* && \
+	make rebuild_cache && \
+	cd /src/openvas-libraries-* && \
 	mkdir build && \
 	cd build && \
 	cmake .. && \
 	make && \
 	make install && \
-
-
+	make rebuild_cache && \
+	cd / && \
+	rm -rf /src 
