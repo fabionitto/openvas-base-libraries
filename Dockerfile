@@ -1,7 +1,7 @@
 FROM 	debian:jessie
 MAINTAINER Fabio Nitto "fabio.nitto@gmail.com"
 
-RUN apt-get update && apt-get -y install \
+RUN apt-get update && apt-get -y --no-install-recommends install \
 	bison \
 	build-essential \
 	cmake \
@@ -27,7 +27,8 @@ RUN apt-get update && apt-get -y install \
 	uuid-dev \
 	wget \
 	xmltoman && \
-	apt-get clean 
+	apt-get clean && \
+	apt-get autoclean
 
 RUN mkdir /src && \
 	cd /src && \
@@ -50,4 +51,7 @@ RUN mkdir /src && \
 	make install && \
 	make rebuild_cache && \
 	cd / && \
-	rm -rf /src 
+	rm -rf /src && \
+	ldconfig
+
+CMD ["/bin/bash"] 
